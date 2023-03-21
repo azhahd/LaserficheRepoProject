@@ -22,8 +22,22 @@ import java.util.function.Consumer;
  * @author 
  */
 public class Sample {
+    
+    private int entryIdToDownload;
+    
+    public Sample(int downloadID){
+        setEntryIdToDownload(downloadID);
+    }
 
-    public static void main(String[] args) {
+    public int getEntryIdToDownload() {
+        return entryIdToDownload;
+    }
+
+    public void setEntryIdToDownload(int entryIdToDownload) {
+        this.entryIdToDownload = entryIdToDownload;
+    }
+
+    public void createFile() {
         String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
         String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
 		String repositoryId = "r-0001d410ba56";
@@ -54,8 +68,7 @@ public class Sample {
         }
 
         // Download an antry 
-        int entryIdToDownload = 16;
-        final String FILE_NAME = "DownloadedFile.txt";
+        final String FILE_NAME = String.format("File%d", entryIdToDownload);
         Consumer<InputStream> consumer = inputStream -> {
             File exportedFile = new File(FILE_NAME);
             try (FileOutputStream outputStream = new FileOutputStream(exportedFile)) {
