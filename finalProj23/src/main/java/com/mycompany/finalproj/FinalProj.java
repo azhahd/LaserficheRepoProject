@@ -7,6 +7,7 @@
 package com.mycompany.finalproj;
 
 import com.laserfiche.repository.api.clients.impl.model.Entry;
+import com.mycompany.sampleproject.Sample;
 
 /**
  *
@@ -17,7 +18,8 @@ public class FinalProj {
     public static void main(String[] args) {
         
         
-        Entry lfEntry = new Entry();
+        Sample entry = new Sample();
+        
         
         
         
