@@ -36,6 +36,7 @@ public class Sample {
         int rootEntryId = 1;
         Entry entry = client.getEntriesClient()
                 .getEntry(repositoryId, rootEntryId, null).join();
+            
 
         System.out.println(
                 String.format("Entry ID: %d, Name: %s, EntryType: %s, FullPath: %s",
@@ -53,7 +54,7 @@ public class Sample {
         }
 
         // Download an antry 
-        int entryIdToDownload = 25;
+        int entryIdToDownload = 16;
         final String FILE_NAME = "DownloadedFile.txt";
         Consumer<InputStream> consumer = inputStream -> {
             File exportedFile = new File(FILE_NAME);
