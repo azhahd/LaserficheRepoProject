@@ -37,7 +37,7 @@ public class FinalProj {
         ArrayList<Object> entryArray = new ArrayList<Object>();
         
          // Read the JSON file into a JSON object
-        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("Test Scenario3.json")));
+        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("Test Scenarionew.json")));
         
 
         JSONArray prossElements = jsonData.getJSONArray("processing_elements");
@@ -108,12 +108,12 @@ public class FinalProj {
                         
                         if(parameters.getString("name").equalsIgnoreCase("length")){
                             length = parameters.getLong("value");
-                            System.out.println(length);
+                            
                         }
                         
                         if(parameters.getString("name").equalsIgnoreCase("operator")){
                             operator = parameters.getString("value");
-                            System.out.println(operator);
+                            
                         }
                         
                         
@@ -210,25 +210,23 @@ public class FinalProj {
                         
                    }
                     
-                    
-                   
                     break;    
                 case"print":
                     
                     for(Object entry: entries)
                     {
                         if (entry instanceof File file) 
-                        {
-                            file.getName();
-                            file.length();
-                            file.getPath();
+                        {     
+                            System.out.println(file.getName());
+                            System.out.println(file.length());
+                            System.out.println(file.getPath());
                         }
                         
                         else if(entry instanceof RepoDirectory repoDirectory)
                         {
-                            repoDirectory.getEntryId();
-                            repoDirectory.getDirectoryName();
-                            repoDirectory.getPath();
+                            System.out.println(repoDirectory.getEntryId());
+                            System.out.println(repoDirectory.getDirectoryName());
+                           // System.out.println(repoDirectory.getPath());
                         }
                     }
                     break;     
