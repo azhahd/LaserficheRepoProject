@@ -1,0 +1,4 @@
+---.
+a sub-list of entries where the given string key appears at-least Min times in the content of the entry. 
+--- needs to appear more than the min amount. 
+The --- is the ---.

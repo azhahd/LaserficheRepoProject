@@ -1,0 +1,4 @@
+this is an example document. 
+the word key appears once in it.
+key needs to appear atleast a min amount of times.
+hence, i am adding more key to increase the count.
