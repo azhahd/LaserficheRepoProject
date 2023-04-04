@@ -37,7 +37,7 @@ public class FinalProj {
         ArrayList<Object> entryArray = new ArrayList<Object>();
         
          // Read the JSON file into a JSON object
-        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("example.json")));
+        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("Test Scenario3.json")));
         
 
         JSONArray prossElements = jsonData.getJSONArray("processing_elements");
@@ -215,14 +215,24 @@ public class FinalProj {
                     break;    
                 case"print":
                     
-                    
-                    
-                    
-                    
-                    
+                    for(Object entry: entries)
+                    {
+                        if (entry instanceof File file) 
+                        {
+                            file.getName();
+                            file.length();
+                            file.getPath();
+                        }
+                        
+                        else if(entry instanceof RepoDirectory repoDirectory)
+                        {
+                            repoDirectory.getEntryId();
+                            repoDirectory.getDirectoryName();
+                            repoDirectory.getPath();
+                        }
+                    }
                     break;     
             }
-            
         }
         
         System.out.println(entryArray);
