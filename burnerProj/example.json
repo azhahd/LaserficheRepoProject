@@ -13,48 +13,9 @@
 			"parameters": [
 				{
 					"name": "key",
-					"value": "sup"
+					"value": "100"
 				}
 			]
-		},
-		{
-			"type": "LengthFilter",
-			"input_entries": [],
-			"parameters": [
-				{
-					"name": "Length",
-					"value": "1024"
-				},
-				{
-					"name": "Operator",
-					"value": "GTE"
-				}
-			]
-		},
-		{
-			"type": "Rename",
-			"input_entries": [],
-			"parameters": [
-				{
-					"name": "Suffix",
-					"value": "_edited"
-				}
-			]
-		},
-		{
-			"type": "Split",
-			"input_entries": [],
-			"parameters": [
-				{
-					"name": "Lines",
-					"value": "10"
-				}
-			]
-		},
-		{
-			"type": "Print",
-			"input_entries": [],
-			"parameters": []
 		}
 	]
 }

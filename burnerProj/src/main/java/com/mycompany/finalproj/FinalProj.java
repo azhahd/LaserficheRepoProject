@@ -20,13 +20,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import static java.lang.Integer.parseInt;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import org.json.*;
@@ -55,7 +49,7 @@ public class FinalProj {
         
         String entryType = inEntry.getString("type");
         
- 
+
         //if the entry is local, add the file to the entryArray
         if(entryType.equalsIgnoreCase("local")){
             
@@ -96,6 +90,7 @@ public class FinalProj {
                             String key = parameters.getString("value");
                             //update entryArray
                             entryArray = nameFilter(entryArray, key);
+                            
                         }
                         
                    }
@@ -370,7 +365,7 @@ public class FinalProj {
         ArrayList<Integer> entryIDArray = new ArrayList<>();
         
         //add x amount entryIDs in arrayList
-        for (int i = 0; i <= max; i++) {
+        for (int i = 0; i < max; i++) {
             
             //only add if i is less than entries size
             if(i<entries.size())
@@ -427,11 +422,12 @@ public class FinalProj {
                 RepoDirectory repoDirect = (RepoDirectory) entry;
                 
                 //connect to client and check name of folder, compare to key
-                if(repoDirect.getName().toLowerCase().contains(key.toLowerCase())){
+                if(repoDirect.getDirectoryName().toLowerCase().contains(key.toLowerCase())){
                     
                     //add repoDirectory to list if it contains key
                     sublist.add(repoDirect);
                 }
+
                 
             }
                 
@@ -581,6 +577,26 @@ public class FinalProj {
         return sublist;
        
     }
+    
+//    public ArrayList<Object> Print(ArrayList<Object> entries){
+//        
+//        for (Object entry: entries) {
+//            
+//            if(entry instanceof File){
+//                
+//                System.out.println("Name: " + ((File) entry).getName() + 
+//                "Length: " +  (((File) entry).length()) + "Path: " + ((File) entry).getPath());
+//                
+//            }
+//            
+//            
+//        }
+//        
+//        
+//        return entries;
+//    }
+    
+    
 
 
         
