@@ -2,7 +2,7 @@
 	"name": "Test Scenario",
 	"processing_elements": [
 		{
-			"type": "namefilter",
+			"type": "list",
 			"input_entries": [
 				{
 					"type": "remte",
@@ -12,10 +12,25 @@
 			],
 			"parameters": [
 				{
-					"name": "key",
-					"value": "100"
+					"name": "max",
+					"value": "3"
 				}
 			]
-		}
+		},
+		{
+			"type": "lengthfilter",
+			"input_entries": [],
+			"parameters": [
+				{
+					"name": "Length",
+					"value": "700"
+				},
+				{
+					"name": "Operator",
+					"value": "GTE"
+				}
+			]
+		},
+		
 	]
 }

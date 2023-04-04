@@ -108,10 +108,12 @@ public class FinalProj {
                         
                         if(parameters.getString("name").equalsIgnoreCase("length")){
                             length = parameters.getLong("value");
+                            System.out.println(length);
                         }
                         
                         if(parameters.getString("name").equalsIgnoreCase("operator")){
                             operator = parameters.getString("value");
+                            System.out.println(operator);
                         }
                         
                         
@@ -284,7 +286,7 @@ public class FinalProj {
         
         
             client.close();
-            return new File(FILE_NAME);
+            return new File("entries/" + FILE_NAME);
         //catch if not file, return RepoDirectory object
         }catch(Exception E){
             
@@ -534,10 +536,14 @@ public class FinalProj {
     public static ArrayList<Object> lengthFilter(ArrayList<Object> entries, long length, String Operator){
         ArrayList<Object> sublist = new ArrayList<>();
         
+        
+                
         for(Object afile : entries){
+            
             
             if(afile instanceof File && ((File) afile).isFile()){
                 long file_len = ((File)afile).length();
+                
 
                 switch (Operator) {
                     case "EQ" -> {
