@@ -682,8 +682,6 @@ public class FinalProj {
      */
     public static ArrayList split(int n, ArrayList<Object> entries) throws IOException {
         n = Math.abs(n);// As long as n>0
-        int fileCount = 1;// original file
-        int lineCount = 0;// count lines
         ArrayList<Object> newEntries = new ArrayList<>();
         
         File folder = new File("Split Files");
@@ -693,6 +691,8 @@ public class FinalProj {
    
         for (int i = 0; i < entries.size(); i++) {
          
+            int fileCount = 1;// original file
+            int lineCount = 0;// count lines
             
         if ((entries.get(i) instanceof File && ((File)entries.get(i)).isFile()) ||
                 entries.get(i) instanceof RemoteFile) {
@@ -706,7 +706,7 @@ public class FinalProj {
                    
         try (BufferedReader reader = new BufferedReader(new FileReader(readFile))) {// reads the designated file
             String Line;// this will be string of each line
-            BufferedWriter writer = new BufferedWriter(new FileWriter("Split Files/" + readFile.getName() + fileCount + ".txt"));// writes in the new designated file using prefix
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Split Files/" + readFile.getName() + ".part" + fileCount + ".txt"));// writes in the new designated file using prefix
 
             while ((Line = reader.readLine()) != null) {// in a constant loop
                 writer.write(Line);// writes the string line in the loop in a new file
@@ -715,17 +715,16 @@ public class FinalProj {
 
                 if (lineCount == n) {// if line is equivalent to the max lines in a file
                     writer.close();// close the file writing in
-                    fileCount++;// increase the file count
                     lineCount = 0;// reset line count to 0
-                    writer = new BufferedWriter(new FileWriter("Split Files/" + readFile.getName() + fileCount + ".txt"));// switch the value of writer to a new so you write in diff file
-                    newEntries.add(new File("Split Files/" + readFile.getName() + fileCount + ".txt"));
+
+                    newEntries.add(new File("Split Files/" + readFile.getName() + ".part" + fileCount + ".txt"));
+                    fileCount++;// increase the file count
+                    writer = new BufferedWriter(new FileWriter("Split Files/" + readFile.getName() + ".part" + fileCount + ".txt"));// switch the value of writer to a new so you write in diff file
+
                 }
             }
             writer.close();//closes the writer
             
-           
-           
-
         } catch (IOException e) {
             System.out.println("An error occurred while splitting the file: " + e.getMessage());
         }
