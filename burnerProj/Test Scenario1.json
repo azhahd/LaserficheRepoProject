@@ -1,0 +1,62 @@
+{
+	"name": "Test Scenario",
+	"processing_elements": [
+		{
+			"type": "List",
+			"input_entries": [
+				{
+					"type": "remte",
+					"repositoryId": "r-0001d410ba56",
+					"entryId": "15"
+				}
+			],
+			"parameters": [
+				{
+					"name": "Max",
+					"value": "2"
+				}
+			]
+		},
+		{
+			"type": "CountFilter",
+			"input_entries": [],
+			"parameters": [
+				{
+					"name": "key",
+					"value": "elbow"
+				},
+
+				{
+					"name": "Min",
+					"value": "1"
+				}
+				
+			]
+		},
+		{
+			"type": "tape",
+			"input_entries": [],
+			"parameters": [
+				{
+					"name": "Length",
+					"value": "66000"
+				},
+				
+				{
+					"name": "Operator",
+					"value": "LT"
+				}
+			]
+		},
+		{
+			"type": "worms",
+			"input_entries": [],
+			"parameters": []
+		},
+		{
+			"type": "Print",
+			"input_entries": [],
+			"parameters": []
+		}
+	]
+}

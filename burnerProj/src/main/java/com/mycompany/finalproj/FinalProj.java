@@ -40,7 +40,7 @@ public class FinalProj {
         ArrayList<Object> entryArray = new ArrayList<Object>();
         
          // Read the JSON file into a JSON object
-        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("example.json")));
+        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("Test Scenario copy.json")));
         
 
         JSONArray prossElements = jsonData.getJSONArray("processing_elements");
@@ -409,41 +409,41 @@ public class FinalProj {
     public static ArrayList<Object> nameFilter(ArrayList<Object> entries, String key) {
         
         //create arrayList to store sublist of entries
-        ArrayList<Object> sublist = new ArrayList<>();
+        ArrayList<Object> sublist = new ArrayList<>(); //create array list for filtered 
         
         //go through each entry
-        for (Object entry : entries) {
+        for (Object entry : entries) { //start for loop and iterate through each entry
             
             //if it is of type file
-            if (entry instanceof File) {
+            if (entry instanceof File) { //if entry is a local file
                 File afile = (File) entry;
-                String fileName = afile.getName();
+                String fileName = afile.getName(); //get name
                 
                 //compare file or directory name to key
-                if (fileName.toLowerCase().contains(key.toLowerCase())) {
+                if (fileName.toLowerCase().contains(key.toLowerCase())) { //change filename to lower case so it doesn't matter and scan for the key
                     
                     //add file to sublist if it contains key
-                    sublist.add(afile);
+                    sublist.add(afile); //add file to filtered array
                 }
             //if it is a repoDirectory
-            }else if(entry instanceof RemoteFile){
+            }else if(entry instanceof RemoteFile){ //but if it's a remote file
                 
-                if(((RemoteFile) entry).getName().contains(key.toLowerCase())){
+                if(((RemoteFile) entry).getName().contains(key.toLowerCase())){ //change case of file name find key
                     
                     //add file to sublist if it contains key
-                    sublist.add(entry);
+                    sublist.add(entry); // add remote file to sorted array list
                 }
                 
                 
-            }else if(entry instanceof RepoDirectory){
+            }else if(entry instanceof RepoDirectory){ //if its a directory 
                 
-                RepoDirectory repoDirect = (RepoDirectory) entry;
+                RepoDirectory repoDirect = (RepoDirectory) entry; //make it an entry
                 
                 //connect to client and check name of folder, compare to key
-                if(repoDirect.getDirectoryName().toLowerCase().contains(key.toLowerCase())){
+                if(repoDirect.getDirectoryName().toLowerCase().contains(key.toLowerCase())){ //switch case and check for key
                     
                     //add repoDirectory to list if it contains key
-                    sublist.add(repoDirect);
+                    sublist.add(repoDirect); //add to filtered array
                 }
 
                 
@@ -452,7 +452,7 @@ public class FinalProj {
         }
         
         //return sublist
-        return sublist;
+        return sublist; //return the whole array
     }
     
     
@@ -482,7 +482,7 @@ public class FinalProj {
                 String line;
                 int count = 0;
                 while ((line = reader.readLine()) != null) {
-                    count += countSubstring(line, key);
+                    count += countSubstring(line.toLowerCase(), key.toLowerCase());
                 }
                 reader.close();
                 
@@ -521,20 +521,28 @@ public class FinalProj {
      * @param key
      * @return 
      */
-    public static ArrayList<Object> contentFilter(ArrayList<Object> entries, String key){
+    public static ArrayList<Object> contentFilter(ArrayList<Object> entries, String key) throws FileNotFoundException{
         ArrayList<Object> sublist = new ArrayList<>();
+        BufferedReader inFile = null;
         
         for(Object afile : entries){
             
-            if(afile instanceof File && ((File) afile).isFile()){
+            if((afile instanceof File && ((File) afile).isFile()) ||
+                    afile instanceof RemoteFile){
+                
+                if(afile instanceof File){
+                    inFile = new BufferedReader(new FileReader((File) afile));
+                }else if(afile instanceof RemoteFile){
+                    inFile = new BufferedReader(new FileReader(((RemoteFile)afile).getFileobj()));
+                }
             
-                try(BufferedReader input = new BufferedReader(new FileReader((File) afile))){
+                try(BufferedReader input = inFile){
                     while (true){
                         String line = input.readLine();
                         if (line == null){
                             break;
                         }
-                        else if(line.contains(key)){
+                        else if(line.toLowerCase().contains(key.toLowerCase())){
                             sublist.add(afile);
                             break;
                         }

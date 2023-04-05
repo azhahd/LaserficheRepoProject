@@ -1,0 +1,62 @@
+{
+	"name": "Test Scenario",
+	"processing_elements": [
+		{
+			"type": "CountFilter",
+			"input_entries": [
+				{
+					"type": "local",
+					"path": "/Users/aizah/Documents/GitHub/FinalProject/burnerProj/NewTestFile.txt"
+				}
+			],
+			"parameters": [
+				{
+					"name": "key",
+					"value": "paul"
+				},
+
+				{
+					"name": "Min",
+					"value": "5"
+				}
+
+			]
+		},
+		{
+			"type": "False",
+			"input_entries": [],
+			"parameters": [
+				{
+					"name": "key",
+					"value": "paul"
+				},
+
+				{
+					"name": "Min",
+					"value": "1"
+				}
+				
+			]
+		},
+		{
+			"type": "conft",
+			"input_entries": [],
+			"parameters": [
+				{
+					"name": "key",
+					"value": "ELBOW"
+				}
+			]
+		},
+		{
+			"type": "worms",
+			"input_entries": [],
+			"parameters": []
+		},
+		{
+			"type": "Print",
+			"input_entries": [],
+			"parameters": []
+		}
+	]
+}
