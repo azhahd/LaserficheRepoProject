@@ -1,8 +1,8 @@
 /** *************************************
- * Project:
+ * Project: Remote file class
  * Programmer: Aris Ariawan
- * Date: Month #, 2023
- * Program: ----.java
+ * Date: April, 2023
+ * Program: RemoteFile.java
  ************************************** */
 package com.mycompany.finalproj;
 
@@ -17,10 +17,12 @@ import java.io.File;
  */
 public class RemoteFile{
     
+    //fields
     private File fileobj;
     private String repoId;
     private int entryId;
 
+    //contructor
     public RemoteFile(File fileobj, String repoId, int entryId) {
         this.fileobj = fileobj;
         this.repoId = repoId;
@@ -58,15 +60,19 @@ public class RemoteFile{
     public long getLength(){
         return fileobj.length();
     }
-
+    
     @Override
     public String toString() {
         return "RemoteFile{" + "fileobj=" + fileobj + ", repoId=" + repoId + ", entryId=" + entryId + '}';
     }
     
-    
+    /**
+     * getPath()
+     * @return - the path of the remote File
+     */
     public String getPath(){
 
+        //connect to repository
         String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
         String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
 	String repositoryId = repoId;
@@ -75,15 +81,17 @@ public class RemoteFile{
         RepositoryApiClient client = RepositoryApiClientImpl.createFromAccessKey(
                 servicePrincipalKey, accessKey);
 
-        // Get information about the ROOT entry, i.e. entry with ID=1
+        // Get information about the ROOT entry
         int rootEntryId = entryId;
         com.laserfiche.repository.api.clients.impl.model.Entry entry = client.getEntriesClient()
                 .getEntry(repositoryId, rootEntryId, null).join();
             
         
+        //close client
         client.close(); 
         
-  
+        
+        //return path
         return entry.getFullPath();
     }
     

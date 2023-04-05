@@ -6,7 +6,7 @@
 			"input_entries": [
 				{
 					"type": "local",
-					"path": "/Users/aizah/Documents/GitHub/FinalProject/burnerProj/NewTestFile.txt"
+					"path": "NewTestFile.txt"
 				}
 			],
 			"parameters": [

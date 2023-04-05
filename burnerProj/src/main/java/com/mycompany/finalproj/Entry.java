@@ -1,8 +1,8 @@
 /** *************************************
- * Project:
+ * Project: Entry class
  * Programmer: Aris Ariawan
- * Date: Month #, 2023
- * Program: ----.java
+ * Date: April, 2023
+ * Program: Entry.java
  ************************************** */
 package com.mycompany.finalproj;
 
@@ -12,6 +12,7 @@ package com.mycompany.finalproj;
  */
 public class Entry extends Object {
     
+    //this class allows for any type of object to be stored in type 'Entry'
     private Object value;
     
     public Entry(Object value){

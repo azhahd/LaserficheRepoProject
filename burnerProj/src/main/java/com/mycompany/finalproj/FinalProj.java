@@ -1,8 +1,8 @@
 /***************************************
- * Project: 
- * Programmer: Aris Ariawan
- * Date: Month #, 2023
- * Program: ----.java
+ * Project: File Processing System
+ * Programmer: Aris, Taya, Daniel, Aizah, Apoorva
+ * Date: April, 2023
+ * Program: FinalProj.java
  ***************************************/
 package com.mycompany.finalproj;
 
@@ -34,14 +34,19 @@ import org.json.*;
  * @author arisariawan
  */
 public class FinalProj {
-
+    
+    /**
+     * @author Aris
+     * @param args
+     * @throws java.io.FileNotFoundException
+     */
     public static void main(String[] args) throws FileNotFoundException, IOException {
  
-        // create ArrayList to store input entries
+        //create ArrayList to store input entries
         ArrayList<Object> entryArray = new ArrayList<>();
         
         //read JSON file into JSON object
-        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("Test Scenario copy.json")));
+        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("example.json")));
         
         //get processing element body from JSON object
         JSONArray prossElements = jsonData.getJSONArray("processing_elements");
@@ -184,8 +189,7 @@ public class FinalProj {
                             //update entryArray, call split
                             entryArray = split(lines, entryArray);
                         }
-                        
-                        
+                                      
                     }                        
 
                     break;    
@@ -429,6 +433,7 @@ public class FinalProj {
             
         }
         
+        //close client
         client.close();
         
         //return ArrayList of files in directory
@@ -469,8 +474,7 @@ public class FinalProj {
                     //add file to sublist if it contains key
                     sublist.add(entry); // add remote file to sorted array list
                 }
-                
-                
+                     
             }else if(entry instanceof RepoDirectory){ //if its a directory 
                 
                 RepoDirectory repoDirect = (RepoDirectory) entry; //make it an entry
@@ -681,16 +685,12 @@ public class FinalProj {
         int fileCount = 1;// original file
         int lineCount = 0;// count lines
         ArrayList<Object> newEntries = new ArrayList<>();
-
-        //File inputFile = new File("Countries_copy_copy copy.txt");// tried it with just a sample file
-        //String outputFilePrefix = "Countries_copy_copy copy";
         
         File folder = new File("Split Files");
         folder.mkdirs();
         
         File readFile = null;
-
-        
+   
         for (int i = 0; i < entries.size(); i++) {
          
             
@@ -792,10 +792,16 @@ public class FinalProj {
     return changedFiles;
 }
     
+    /**
+     * @author Aizah
+     * @param entries - ArrayList of entries
+     * @return - list of entries
+     */
     public static ArrayList<Object> Print(ArrayList<Object> entries){
         
         for(Object entry: entries)
         {
+            //if entry is local, print info
             if (entry instanceof File file) 
             {     
                 System.out.print("Name: " + file.getName());
@@ -803,7 +809,8 @@ public class FinalProj {
                 System.out.print("; Path: " + file.getPath());
                 System.out.println();
             }
-                        
+            
+            //if entry is a remote directory
             else if(entry instanceof RepoDirectory repoDirectory)
             {
                 System.out.print("Name: " + repoDirectory.getDirectoryName());
@@ -811,6 +818,8 @@ public class FinalProj {
                 System.out.print("; Path: " + repoDirectory.getPath());
                 System.out.println();
             }
+            
+            //if entry is a remote file
             else if(entry instanceof RemoteFile remoteFile){
                 
                 System.out.print("Name: "  + remoteFile.getName());
@@ -822,11 +831,14 @@ public class FinalProj {
  
             }
         }
+        
+        //return same entries as input
         return entries;
-    }
+    
+    }//end of Print
     
       
-    }
+}//end of class
     
  
 

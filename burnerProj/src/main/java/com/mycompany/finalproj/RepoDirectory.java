@@ -1,8 +1,8 @@
 /** *************************************
- * Project:
+ * Project: Remote directory class
  * Programmer: Aris Ariawan
- * Date: Month #, 2023
- * Program: ----.java
+ * Date: April, 2023
+ * Program: RepoDirectory.java
  ************************************** */
 package com.mycompany.finalproj;
 
@@ -16,21 +16,17 @@ import com.laserfiche.repository.api.RepositoryApiClientImpl;
  */
 public class RepoDirectory {
     
-//    private String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
-//    private String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
-//    private String repositoryId = this.getRepoId();
-        
-  //  private AccessKey accessKey = AccessKey.createFromBase64EncodedAccessKey(accessKeyBase64);
-    
-    
+    //fields
     private String repoId;
     private int entryId;
 
+    //constructor
     public RepoDirectory(String repoId, int entryId) {
         this.repoId = repoId;
         this.entryId = entryId;
     }
 
+    //getters and setters
     public String getRepoId() {
         return repoId;
     }
@@ -47,17 +43,13 @@ public class RepoDirectory {
         this.entryId = entryId;
     }
     
+    /**
+     * getDirectoryName()
+     * @return - String of directory name
+     */
     public String getDirectoryName(){
-//        RepositoryApiClient client = RepositoryApiClientImpl.createFromAccessKey(
-//                servicePrincipalKey, accessKey);
-//
-//        // Get information about the ROOT entry, i.e. entry with ID=1
-//        int rootEntryId = this.getEntryId();
-//        com.laserfiche.repository.api.clients.impl.model.Entry entry = client.getEntriesClient()
-//                .getEntry(repositoryId, rootEntryId, null).join();
-//        
-//        client.close();
-
+        
+        //connect to repository
         String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
         String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
 	String repositoryId = repoId;
@@ -66,20 +58,27 @@ public class RepoDirectory {
         RepositoryApiClient client = RepositoryApiClientImpl.createFromAccessKey(
                 servicePrincipalKey, accessKey);
 
-        // Get information about the ROOT entry, i.e. entry with ID=1
+        // Get information about the entry
         int rootEntryId = entryId;
         com.laserfiche.repository.api.clients.impl.model.Entry entry = client.getEntriesClient()
                 .getEntry(repositoryId, rootEntryId, null).join();
             
         
+        //close client
         client.close(); 
         
-  
+        
+        //return name
         return entry.getName();
     }
     
-     public String getPath(){
-
+    /**
+     * getPath()
+     * @return - String of directory path
+     */
+    public String getPath(){
+        
+        //connect to repository
         String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
         String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
 	String repositoryId = repoId;
@@ -88,15 +87,15 @@ public class RepoDirectory {
         RepositoryApiClient client = RepositoryApiClientImpl.createFromAccessKey(
                 servicePrincipalKey, accessKey);
 
-        // Get information about the ROOT entry, i.e. entry with ID=1
+        // Get information about the entry
         int rootEntryId = entryId;
         com.laserfiche.repository.api.clients.impl.model.Entry entry = client.getEntriesClient()
                 .getEntry(repositoryId, rootEntryId, null).join();
             
-        
+        //close client
         client.close(); 
         
-  
+        //return path
         return entry.getFullPath();
     }
 
@@ -104,18 +103,6 @@ public class RepoDirectory {
     public String toString() {
         return "RepoDirectory{" + "repoId=" + repoId + ", entryId=" + entryId + ", Name:" + getDirectoryName() + '}';
     }
-    
-//    public long getLength(){
-//        
-//        RepositoryApiClient client = RepositoryApiClientImpl.createFromAccessKey(
-//            servicePrincipalKey, accessKey);        
-//        
-//        return Long.parseLong(client.getEntriesClient().getDocumentContentType(repoId, entryId).join().get("Content-Length"));
-//        
-//    }
-    
-    
-    
     
     
 }
