@@ -482,7 +482,6 @@ public class FinalProj {
                     sublist.add(repoDirect); //add to filtered array
                 }
 
-                
             }
                 
         }
@@ -552,32 +551,37 @@ public class FinalProj {
     
     
     /**
-     * Taya
+     * @author Taya
      * @param entries
      * @param key
-     * @return 
+     * @return - ArrayList of entries
      */
     public static ArrayList<Object> contentFilter(ArrayList<Object> entries, String key) throws FileNotFoundException{
+        //ArrayList to hold the files that contain the key
         ArrayList<Object> sublist = new ArrayList<>();
         BufferedReader inFile = null;
         
+        //Search through the files in the list of entries
         for(Object afile : entries){
-            
+            //detect whether the current object is a file 
             if((afile instanceof File && ((File) afile).isFile()) ||
                     afile instanceof RemoteFile){
-                
+                //make file readers
                 if(afile instanceof File){
                     inFile = new BufferedReader(new FileReader((File) afile));
                 }else if(afile instanceof RemoteFile){
                     inFile = new BufferedReader(new FileReader(((RemoteFile)afile).getFileobj()));
                 }
-            
+                
                 try(BufferedReader input = inFile){
+                    //go through the file line by line 
                     while (true){
                         String line = input.readLine();
+                        //break loop when end of file
                         if (line == null){
                             break;
                         }
+                        //check if the line contains the key, and add the file to the ArrayList if it does and break out of the loop
                         else if(line.toLowerCase().contains(key.toLowerCase())){
                             sublist.add(afile);
                             break;
@@ -595,11 +599,11 @@ public class FinalProj {
     }
     
     /**
-     * Taya
+     * @author - Taya
      * @param entries
      * @param length
      * @param Operator
-     * @return 
+     * @return ArrayList of entries
      */
     public static ArrayList<Object> lengthFilter(ArrayList<Object> entries, long length, String Operator){
         ArrayList<Object> sublist = new ArrayList<>();
@@ -608,8 +612,7 @@ public class FinalProj {
         
                 
         for(Object afile : entries){
-            
-            
+            // go through each instance of the list of entries, check if the object is a file and get the length of the file
             if((afile instanceof File && ((File) afile).isFile()) || 
                     (afile instanceof RemoteFile)){
                 
@@ -621,31 +624,37 @@ public class FinalProj {
                 }
                 
                 switch (Operator) {
+                    //check if the length of the file is equal to the value of length parameter, if yes then add the file to the sublist
                     case "EQ" -> {
                         if(file_len == length){
                             sublist.add(afile);
                         }
                     }
+                    //check if the length of the file is not equal to the value of length parameter, if yes then add the file to the sublist
                     case "NEQ" -> {
                         if(file_len != length){
                             sublist.add(afile);
                         }
                     }
+                    //check if the length of the file is greater than the value of length parameter, if yes then add the file to the sublist
                     case "GT" -> {
                         if(file_len > length){
                             sublist.add(afile);
                         }
                     }
+                    //check if the length of the file is greater than or equal to the value of length parameter, if yes then add the file to the sublist
                     case "GTE" -> {
                         if(file_len >= length){
                             sublist.add(afile);
                         }
                     }
+                    //check if the length of the file is less than the value of length parameter, if yes then add the file to the sublist
                     case "LT" -> {
                         if(file_len < length){
                             sublist.add(afile);
                         }
                     }
+                    //check if the length of the file is less than or equal to the value of length parameter, if yes then add the file to the sublist
                     case "LTE" -> {
                         if(file_len <= length){
                             sublist.add(afile);

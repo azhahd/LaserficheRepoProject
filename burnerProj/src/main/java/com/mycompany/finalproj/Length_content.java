@@ -88,9 +88,9 @@ public class Length_content {
     public static void main(String[] args) {
         // TODO code application logic here
         ArrayList<File> inputs = new ArrayList<>();
-        inputs.add(new File("C:/Users/Taya/Downloads/Countries.txt"));
-        inputs.add(new File("C:/Users/Taya/Documents/GitHub/FinalProject/finalProj23/DownloadedFile.txt"));
-        inputs.add(new File("C:/Users/Taya/Documents/justin.txt"));
+        inputs.add(new File("C:/Users/Taya/Downloads/primes-from-0-to-100k"));
+        inputs.add(new File("C:/Users/Taya/Downloads/primes-from-100k-to-200k"));
+        inputs.add(new File("C:/Users/Taya/Downloads/primes-from-200k-to-300k"));
         
         /*for (File afile : inputs){
             System.out.println(afile.length());
@@ -99,9 +99,13 @@ public class Length_content {
         //ArrayList<File> sublist = content_filter(inputs, "Turkey");
         ArrayList<File> sublist = length_filter(inputs, 10, "GT");
         
-        for(File afile: sublist){
+       /* for(File afile: sublist){
             System.out.println(afile.getPath());
+        }*/
+        for(File afile : inputs){
+            System.out.println(afile.length());
         }
+        
     }
     
 }
