@@ -18,19 +18,30 @@
 			]
 		},
 		{
-			"type": "lengthfilter",
+			"type": "Rename",
 			"input_entries": [],
 			"parameters": [
 				{
-					"name": "Length",
-					"value": "700"
-				},
+					"name": "Suffix",
+					"value": "_edited"
+				}
+			]
+		},		
+		{
+			"type": "Split",
+			"input_entries": [],
+			"parameters": [
 				{
-					"name": "Operator",
-					"value": "GTE"
+					"name": "Lines",
+					"value": "100"
 				}
 			]
 		},
+		{
+			"type": "Print",
+			"input_entries": [],
+			"parameters": []
+		}
 		
 	]
 }

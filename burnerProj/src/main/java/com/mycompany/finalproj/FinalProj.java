@@ -12,12 +12,15 @@ import com.laserfiche.repository.api.RepositoryApiClientImpl;
 import com.laserfiche.repository.api.clients.impl.model.Entry;
 import com.laserfiche.repository.api.clients.impl.model.ODataValueContextOfIListOfEntry;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ public class FinalProj {
         ArrayList<Object> entryArray = new ArrayList<Object>();
         
          // Read the JSON file into a JSON object
-        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("Test Scenarionew.json")));
+        JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("example.json")));
         
 
         JSONArray prossElements = jsonData.getJSONArray("processing_elements");
@@ -76,6 +79,7 @@ public class FinalProj {
             JSONArray paramArray = prossElements.getJSONObject(i).getJSONArray("parameters");
             
             String prossType = type.getString("type").toLowerCase();
+           
             
             switch(prossType){
                 
@@ -88,6 +92,7 @@ public class FinalProj {
                         
                         if(parameters.getString("name").equalsIgnoreCase("key")){
                             String key = parameters.getString("value");
+                           
                             //update entryArray
                             entryArray = nameFilter(entryArray, key);
                             
@@ -107,13 +112,11 @@ public class FinalProj {
                         JSONObject parameters = paramArray.getJSONObject(j);
                         
                         if(parameters.getString("name").equalsIgnoreCase("length")){
-                            length = parameters.getLong("value");
-                            
+                            length = parameters.getLong("value");                          
                         }
                         
                         if(parameters.getString("name").equalsIgnoreCase("operator")){
-                            operator = parameters.getString("value");
-                            
+                            operator = parameters.getString("value");                       
                         }
                         
                         
@@ -174,6 +177,9 @@ public class FinalProj {
                         
                         if(parameters.getString("name").equalsIgnoreCase("lines")){
                             int lines = parameters.getInt("value");
+                            
+                            //entryArray
+                            entryArray = split(lines, entryArray);
                         }
                         
                         
@@ -206,35 +212,21 @@ public class FinalProj {
                         
                         if(parameters.getString("name").equalsIgnoreCase("suffix")){
                             String suffix = parameters.getString("value");
+                            
+                            //update entryArray
+                            entryArray = rename(suffix, entryArray);
                         }
                         
                    }
-                    
+
                     break;    
                 case"print":
                     
-                    for(Object entry: entries)
-                    {
-                        if (entry instanceof File file) 
-                        {     
-                            System.out.println(file.getName());
-                            System.out.println(file.length());
-                            System.out.println(file.getPath());
-                        }
-                        
-                        else if(entry instanceof RepoDirectory repoDirectory)
-                        {
-                            System.out.println(repoDirectory.getEntryId());
-                            System.out.println(repoDirectory.getDirectoryName());
-                           // System.out.println(repoDirectory.getPath());
-                        }
-                    }
+                    entryArray = Print(entryArray);
                     break;     
-            }
-        }
-        
-        System.out.println(entryArray);
-
+            }          
+        }    
+        //System.out.println(entryArray);
     }
 
 
@@ -294,7 +286,12 @@ public class FinalProj {
         
         
             client.close();
-            return new File("entries/" + FILE_NAME);
+            
+            //File remFile = new File("entries/" + FILE_NAME);
+            RemoteFile remFile = new RemoteFile(new File("entries/" + FILE_NAME), repoID, entryID);
+            //System.out.println(remFile);
+            //return new File("entries/" + FILE_NAME);
+            return remFile;
         //catch if not file, return RepoDirectory object
         }catch(Exception E){
             
@@ -316,7 +313,7 @@ public class FinalProj {
             if(entries.get(i) instanceof File && 
                     ((File) entries.get(i)).isDirectory()){
                 
-                File directory = (File) entries.get(i);
+                File directory = (File) entries.get(i);              
                 
                 //put files in directory into array
                 File[] files = directory.listFiles();
@@ -339,6 +336,8 @@ public class FinalProj {
             //if it is a repoDirectory
             }else if(entries.get(i) instanceof RepoDirectory repoDirect){
                 
+               // System.out.println(repoDirect.getPath());
+                
                 
                 ArrayList<File> repoFiles = dlFromRepoDirectory(repoDirect.getRepoId(), repoDirect.getEntryId(), max);
                 newEntries.addAll(repoFiles);
@@ -355,7 +354,7 @@ public class FinalProj {
     
     public static ArrayList dlFromRepoDirectory(String repoID, int entryID, int max){
         
-        ArrayList<File> filesFromRepoDirect = new ArrayList<>();
+        ArrayList<Object> filesFromRepoDirect = new ArrayList<>();
         
         String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
         String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
@@ -389,8 +388,8 @@ public class FinalProj {
             
             Object repoFileLF = repoFile(repoID, entryIDArray.get(i));
             
-            if(repoFileLF instanceof File)
-                filesFromRepoDirect.add((File)repoFileLF);
+            filesFromRepoDirect.add(repoFileLF);
+            
             
         }
         
@@ -415,7 +414,7 @@ public class FinalProj {
         //go through each entry
         for (Object entry : entries) {
             
-            //if it is of type file (local)
+            //if it is of type file
             if (entry instanceof File) {
                 File afile = (File) entry;
                 String fileName = afile.getName();
@@ -427,6 +426,15 @@ public class FinalProj {
                     sublist.add(afile);
                 }
             //if it is a repoDirectory
+            }else if(entry instanceof RemoteFile){
+                
+                if(((RemoteFile) entry).getName().contains(key.toLowerCase())){
+                    
+                    //add file to sublist if it contains key
+                    sublist.add(entry);
+                }
+                
+                
             }else if(entry instanceof RepoDirectory){
                 
                 RepoDirectory repoDirect = (RepoDirectory) entry;
@@ -457,12 +465,20 @@ public class FinalProj {
      * @throws IOException 
      */
     public static ArrayList<Object> countFilter(ArrayList<Object> entries, String key, int min) throws IOException {
-        ArrayList<Object> filteredEntries = new ArrayList<Object>();
+        ArrayList<Object> filteredEntries = new ArrayList<>();
+        
+        BufferedReader reader = null;
         
         for (Object entry : entries) {
-            if (entry instanceof File && ((File)entry).isFile()) {
+            if ((entry instanceof File && ((File)entry).isFile()) ||
+                    entry instanceof RemoteFile) {
                 
-                BufferedReader reader = new BufferedReader(new FileReader((File)entry));
+                if(entry instanceof File file){
+                    reader = new BufferedReader(new FileReader(file));
+                }else{
+                    reader = new BufferedReader(new FileReader(((RemoteFile)entry).getFileobj()));
+                }
+               
                 String line;
                 int count = 0;
                 while ((line = reader.readLine()) != null) {
@@ -544,15 +560,22 @@ public class FinalProj {
     public static ArrayList<Object> lengthFilter(ArrayList<Object> entries, long length, String Operator){
         ArrayList<Object> sublist = new ArrayList<>();
         
+        long file_len = 0;
         
                 
         for(Object afile : entries){
             
             
-            if(afile instanceof File && ((File) afile).isFile()){
-                long file_len = ((File)afile).length();
+            if((afile instanceof File && ((File) afile).isFile()) || 
+                    (afile instanceof RemoteFile)){
                 
-
+                if(afile instanceof File){                  
+                    file_len = ((File)afile).length();
+                }
+                else if(afile instanceof RemoteFile){
+                    file_len = ((RemoteFile) afile).getLength();
+                }
+                
                 switch (Operator) {
                     case "EQ" -> {
                         if(file_len == length){
@@ -592,28 +615,164 @@ public class FinalProj {
        
     }
     
-//    public ArrayList<Object> Print(ArrayList<Object> entries){
-//        
-//        for (Object entry: entries) {
-//            
-//            if(entry instanceof File){
-//                
-//                System.out.println("Name: " + ((File) entry).getName() + 
-//                "Length: " +  (((File) entry).length()) + "Path: " + ((File) entry).getPath());
-//                
-//            }
-//            
-//            
-//        }
-//        
-//        
-//        return entries;
-//    }
-    
-    
+    /**
+     * Patino
+     * @param n
+     * @param entries
+     * @param outputFilePrefix
+     * @return
+     * @throws IOException 
+     */
+    public static ArrayList split(int n, ArrayList<Object> entries) throws IOException {
+        n = Math.abs(n);// As long as n>0
+        int fileCount = 1;// original file
+        int lineCount = 0;// count lines
+        ArrayList<Object> newEntries = new ArrayList<>();
 
+        //File inputFile = new File("Countries_copy_copy copy.txt");// tried it with just a sample file
+        //String outputFilePrefix = "Countries_copy_copy copy";
+        
+        File folder = new File("Split Files");
+        folder.mkdirs();
+        
+        File readFile = null;
 
         
+        for (int i = 0; i < entries.size(); i++) {
+         
+            
+        if ((entries.get(i) instanceof File && ((File)entries.get(i)).isFile()) ||
+                entries.get(i) instanceof RemoteFile) {
+         //check is remote or local file
+         
+         if(entries.get(i) instanceof File){
+             readFile = (File) entries.get(i);
+         }else{
+             readFile = ((RemoteFile) entries.get(i)).getFileobj();
+         }
+                   
+        try (BufferedReader reader = new BufferedReader(new FileReader(readFile))) {// reads the designated file
+            String Line;// this will be string of each line
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Split Files/" + readFile.getName() + fileCount + ".txt"));// writes in the new designated file using prefix
+
+            while ((Line = reader.readLine()) != null) {// in a constant loop
+                writer.write(Line);// writes the string line in the loop in a new file
+                writer.newLine();// once done printing string go to new line
+                lineCount++;// increase the line count to control how many lines are written to each file
+
+                if (lineCount == n) {// if line is equivalent to the max lines in a file
+                    writer.close();// close the file writing in
+                    fileCount++;// increase the file count
+                    lineCount = 0;// reset line count to 0
+                    writer = new BufferedWriter(new FileWriter("Split Files/" + readFile.getName() + fileCount + ".txt"));// switch the value of writer to a new so you write in diff file
+                    newEntries.add(new File("Split Files/" + readFile.getName() + fileCount + ".txt"));
+                }
+            }
+            writer.close();//closes the writer
+            
+           
+           
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while splitting the file: " + e.getMessage());
+        }
+        }else{
+            newEntries.add(entries.get(i));
+        }
+        
+        }
+        
+        return newEntries;
+    }
+    
+    
+    
+    /**
+     * Patino
+     * @param suffix
+     * @param entries
+     * @return
+     * @throws IOException 
+     */
+    public static ArrayList<Object> rename(String suffix, ArrayList<Object> entries) throws IOException {
+        ArrayList<Object> changedFiles = new ArrayList<>();
+        File folder = new File("Renamed Files");
+        folder.mkdirs();
+        
+        File file = null;
+    
+        for (int i = 0; i < entries.size(); i++) { 
+            
+            
+            if ((entries.get(i) instanceof File && ((File)entries.get(i)).isFile() ||
+                    entries.get(i) instanceof RemoteFile)) {
+                
+                if(entries.get(i) instanceof File){
+                    file = (File) entries.get(i);
+                }else{
+                    file = ((RemoteFile) entries.get(i)).getFileobj();
+                }   
+                    
+                String prefix = file.getName();
+                String filepath = "Renamed Files/" + prefix + suffix;
+                File renamedFile = new File(filepath);
+
+            try (FileInputStream fis = new FileInputStream(file);
+                 FileOutputStream fos = new FileOutputStream(renamedFile)) {
+
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    fos.write(buffer, 0, bytesRead);
+                }
+                System.out.println("File copied successfully to: " + renamedFile.getAbsolutePath());
+                changedFiles.add(renamedFile);
+            } catch (IOException e) {
+                System.out.println("Failed to copy the file: " + e.getMessage());
+            }
+
+        }else{
+                changedFiles.add(entries.get(i));
+            }
+    }
+
+    return changedFiles;
+}
+    
+    public static ArrayList<Object> Print(ArrayList<Object> entries){
+        
+        for(Object entry: entries)
+        {
+            if (entry instanceof File file) 
+            {     
+                System.out.print("Name: " + file.getName());
+                System.out.print("; Length: " + file.length());
+                System.out.print("; Path: " + file.getPath());
+                System.out.println();
+            }
+                        
+            else if(entry instanceof RepoDirectory repoDirectory)
+            {
+                System.out.print("Name: " + repoDirectory.getDirectoryName());
+                System.out.print("; Entry ID: " + repoDirectory.getEntryId());
+                System.out.print("; Path: " + repoDirectory.getPath());
+                System.out.println();
+            }
+            else if(entry instanceof RemoteFile remoteFile){
+                
+                System.out.print("Name: "  + remoteFile.getName());
+                System.out.print("; Entry ID: "  + remoteFile.getEntryId());
+                System.out.print("; Repo ID: "  + remoteFile.getRepoId());
+                System.out.print("; Path: "  + remoteFile.getPath());
+                System.out.print("; Length: " + remoteFile.getLength());
+                System.out.println();
+ 
+            }
+        }
+        return entries;
+    }
+    
+      
     }
     
  
