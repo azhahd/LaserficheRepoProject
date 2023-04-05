@@ -37,23 +37,26 @@ public class FinalProj {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
  
-        ArrayList<Object> entryArray = new ArrayList<Object>();
+        // create ArrayList to store input entries
+        ArrayList<Object> entryArray = new ArrayList<>();
         
-         // Read the JSON file into a JSON object
+        //read JSON file into JSON object
         JSONObject jsonData = new JSONObject(new JSONTokener(new FileReader("Test Scenario copy.json")));
         
-
+        //get processing element body from JSON object
         JSONArray prossElements = jsonData.getJSONArray("processing_elements");
         
+        //get input entries from the processing element
         JSONArray entries = prossElements.getJSONObject(0).getJSONArray("input_entries");
         
+        //get body of input entries
         JSONObject inEntry = entries.getJSONObject(0);
         
-        
+        //get type of input entry
         String entryType = inEntry.getString("type");
         
 
-        //if the entry is local, add the file to the entryArray
+        //if the entry is local, add the File to the entryArray
         if(entryType.equalsIgnoreCase("local")){
             
             String path = inEntry.getString("path");
@@ -66,91 +69,91 @@ public class FinalProj {
             String repoID = inEntry.getString("repositoryId");
             int entryID = inEntry.getInt("entryId");
 
-            //add either a File or RepoDirectory to the entry Array
+            //add either a RemoteFile or RepoDirectory to the entry Array
             entryArray.add(repoFile(repoID, entryID));
 
-  
         }
         
+        //loop through processing elements
         for (int i = 0; i < prossElements.length(); i++) {
             
+            //get current processing element
             JSONObject type = prossElements.getJSONObject(i);
             
+            //store parameters in JSONArray
             JSONArray paramArray = prossElements.getJSONObject(i).getJSONArray("parameters");
             
+            //get type of processing element
             String prossType = type.getString("type").toLowerCase();
            
-            
+            //swtich type of processing elements
             switch(prossType){
                 
                 case "namefilter":
-                                        
-                    for (int j = 0; j < paramArray.length(); j++) {
+                    
+                    //loop through parameters
+                    for (int j = 0; j < paramArray.length(); j++) {                      
                         
-                        
-                        JSONObject parameters = paramArray.getJSONObject(j);
-                        
+                        JSONObject parameters = paramArray.getJSONObject(j);    
                         if(parameters.getString("name").equalsIgnoreCase("key")){
+                            
                             String key = parameters.getString("value");
                            
-                            //update entryArray
+                            //update entryArray by filtering based on name
                             entryArray = nameFilter(entryArray, key);
                             
-                        }
-                        
-                   }
-                         
+                        } 
+                   }           
                     break;
+                    
                 case "lengthfilter":
                     
                     long length = 0;
                     String operator = null;
 
+                    //loop through parameters
                     for (int j = 0; j < paramArray.length(); j++) {
-                        
-                        
+                          
                         JSONObject parameters = paramArray.getJSONObject(j);
                         
                         if(parameters.getString("name").equalsIgnoreCase("length")){
                             length = parameters.getLong("value");                          
                         }
-                        
+ 
                         if(parameters.getString("name").equalsIgnoreCase("operator")){
                             operator = parameters.getString("value");                       
                         }
-                        
-                        
+ 
                     }
                     
-                    //update entryArray
+                    //update entryArray by filtering based on length
                     entryArray = lengthFilter(entryArray, length, operator);
-                    
                     break;
+                    
                 case "contentfilter":
-
+                    
+                    //loop through parameters
                     for (int j = 0; j < paramArray.length(); j++) {
-                        
                         
                         JSONObject parameters = paramArray.getJSONObject(j);
                         
                         if(parameters.getString("name").equalsIgnoreCase("key")){
                             String key = parameters.getString("value");
                             
-                            //update entryArray
+                            //update entryArray by filtering based on content
                             entryArray = contentFilter(entryArray, key);                           
                         }
                         
-                        
                     }                     
-    
-                    break;    
+                    break;   
+                    
                 case "countfilter":
                     
                     String key = null;
                     int min = 0;
-
+                    
+                    //loop through parameters
                     for (int j = 0; j < paramArray.length(); j++) {
-                        
                         
                         JSONObject parameters = paramArray.getJSONObject(j);
                         
@@ -170,15 +173,15 @@ public class FinalProj {
                     break;
                 case "split":
                    
+                    //loop through parameters
                     for (int j = 0; j < paramArray.length(); j++) {
-                        
                         
                         JSONObject parameters = paramArray.getJSONObject(j);
                         
                         if(parameters.getString("name").equalsIgnoreCase("lines")){
                             int lines = parameters.getInt("value");
                             
-                            //entryArray
+                            //update entryArray, call split
                             entryArray = split(lines, entryArray);
                         }
                         
@@ -187,16 +190,16 @@ public class FinalProj {
 
                     break;    
                 case"list":
-                         
+                    
+                    //loop through parameters
                     for (int j = 0; j < paramArray.length(); j++) {
-                        
                         
                         JSONObject parameters = paramArray.getJSONObject(j);
                         
                         if(parameters.getString("name").equalsIgnoreCase("max")){
                             int max = parameters.getInt("value");
                             
-                            //update entryArray
+                            //update entryArray, call list
                             entryArray = List(entryArray, max);                            
                         }
                         
@@ -205,15 +208,15 @@ public class FinalProj {
                     break;
                 case"rename":
                     
+                    //loop through parameters
                     for (int j = 0; j < paramArray.length(); j++) {
-                        
-                        
+                                          
                         JSONObject parameters = paramArray.getJSONObject(j);
                         
                         if(parameters.getString("name").equalsIgnoreCase("suffix")){
                             String suffix = parameters.getString("value");
                             
-                            //update entryArray
+                            //update entryArray, call rename
                             entryArray = rename(suffix, entryArray);
                         }
                         
@@ -222,16 +225,24 @@ public class FinalProj {
                     break;    
                 case"print":
                     
+                    //call print method
                     entryArray = Print(entryArray);
                     break;     
             }          
         }    
-        //System.out.println(entryArray);
-    }
+        
+    }//end of main method
 
 
+    /**
+     * @author - Aris
+     * @param repoID - repositoryID
+     * @param entryID - entryID
+     * @return - RemoteFile or RepoDirectory
+     */
     public static Object repoFile(String repoID, int entryID){
     
+        //connect to laserFiche repository
         String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
        
         String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
@@ -243,21 +254,24 @@ public class FinalProj {
         RepositoryApiClient client = RepositoryApiClientImpl.createFromAccessKey(
             servicePrincipalKey, accessKey);
     
-        
+        //get entry to download
         Entry entryDownload = client.getEntriesClient()
                 .getEntry(repositoryId, entryID, null).join();
         
+        //get name of the file/folder
         final String FILE_NAME = entryDownload.getName();
 
         Consumer<InputStream> consumer = inputStream -> {
             
-            //download files to a folder called entries in program folder
+            //create a directory for original entries
             String filePath = "entries/" + FILE_NAME;
             File folder = new File("entries");
             folder.mkdirs();
+            
+            //create file object for downloaded file
             File exportedFile = new File(filePath);
             
-            
+            //try to write the file
             try (FileOutputStream outputStream = new FileOutputStream(exportedFile)) {
                 byte[] buffer = new byte[1024];
                 while (true) {
@@ -278,33 +292,43 @@ public class FinalProj {
             }
         };
 
-        //try to download file and return file
+        //try to download file and return Remotefile
         try{
         client.getEntriesClient()
             .exportDocument(repositoryId, entryID, null, consumer)
             .join();
         
-        
+            //close client
             client.close();
             
-            //File remFile = new File("entries/" + FILE_NAME);
+            //return remoteFile
             RemoteFile remFile = new RemoteFile(new File("entries/" + FILE_NAME), repoID, entryID);
-            //System.out.println(remFile);
-            //return new File("entries/" + FILE_NAME);
             return remFile;
         //catch if not file, return RepoDirectory object
         }catch(Exception E){
             
+            //close client
             client.close();
+            
+            //return repoDirectory
             return new RepoDirectory(repoID, entryID);
         }
         
-              
-}
+    }//end of repoFile
+    
+    /**
+     * @author Aris
+     * @param entries - ArrayList of entries
+     * @param max - max number of files to download from directory
+     * @return - ArrayList of entries
+     * @throws IOException 
+     */
     public static ArrayList List(ArrayList<Object> entries, int max) throws IOException{
         
+        //create ArrayList to store new Entries
         ArrayList<Object> newEntries = new ArrayList<>();
         
+        //loop through entries
         for (int i = 0; i < entries.size(); i++) {
             
             int fileCount = 0;
@@ -313,11 +337,13 @@ public class FinalProj {
             if(entries.get(i) instanceof File && 
                     ((File) entries.get(i)).isDirectory()){
                 
+                //store path into File object
                 File directory = (File) entries.get(i);              
                 
                 //put files in directory into array
                 File[] files = directory.listFiles();
                 
+                //loop through files in directory
                 for (int j = 0; j < files.length; j++) {
                     
                     //add max amount of files to newEntries arrayList
@@ -336,26 +362,34 @@ public class FinalProj {
             //if it is a repoDirectory
             }else if(entries.get(i) instanceof RepoDirectory repoDirect){
                 
-               // System.out.println(repoDirect.getPath());
-                
-                
+                //call dlFromRepoDirectory
                 ArrayList<File> repoFiles = dlFromRepoDirectory(repoDirect.getRepoId(), repoDirect.getEntryId(), max);
+                
+                //add files downloaded to newEntries
                 newEntries.addAll(repoFiles);
             }
             
         }
         
-        
+        //return newEntries
         return newEntries;
         
-    }
+    }//end of List
     
 
-    
+    /**
+     * @author Aris
+     * @param repoID - repository ID
+     * @param entryID - Entry ID
+     * @param max - max number of entries to download from directory
+     * @return - arrayList of files from directory
+     */
     public static ArrayList dlFromRepoDirectory(String repoID, int entryID, int max){
         
+        //create ArrayList to store files downloaded from repo
         ArrayList<Object> filesFromRepoDirect = new ArrayList<>();
         
+        //connect to LaserFiche repository
         String servicePrincipalKey = "GvWi0AvTLiKfuM_o37OE";
         String accessKeyBase64 = "ewoJImN1c3RvbWVySWQiOiAiMTQwMTM1OTIzOCIsCgkiY2xpZW50SWQiOiAiMGIyYTE1NWEtMjNlMC00ZDFjLWJlYzktY2NiNDM2Y2RmYTQ3IiwKCSJkb21haW4iOiAibGFzZXJmaWNoZS5jYSIsCgkiandrIjogewoJCSJrdHkiOiAiRUMiLAoJCSJjcnYiOiAiUC0yNTYiLAoJCSJ1c2UiOiAic2lnIiwKCQkia2lkIjogIlZkZ0tCR3Jrd3BfOHpUYTZXOFNncjF6MEdneUJRNWI0Q2FKcjJQYlo1X1EiLAoJCSJ4IjogIjlreE5hNE1vYXlkOTRFZTdUT2hfeXE0ZlZlMDJCNXFsYWJJeHBCOG1qX0UiLAoJCSJ5IjogIld3bjdLMDdhTmxhSU5nSGZ0VVRzbWxyMElCTmE0RFB1ZTIwVzNpcFFxLXMiLAoJCSJkIjogIkhQcjNfZm9YQ1pEX01hUHAwWVlwNDJwbTNEOXRmQk9HdmxOXzBsclB3WkUiLAoJCSJpYXQiOiAxNjc3Mjk3OTMzCgl9Cn0=";
         String repositoryId = repoID;
@@ -373,11 +407,11 @@ public class FinalProj {
         //create ArrayList to store all entryIDs in directory
         ArrayList<Integer> entryIDArray = new ArrayList<>();
         
-        //add x amount entryIDs in arrayList
+        //add max amount entryIDs in arrayList
         for (int i = 0; i < max; i++) {
             
             //only add if i is less than entries size
-            if(i<entries.size())
+            if(i<entries.size())    
                 entryIDArray.add(entries.get(i).getId());
             else
                 break;
@@ -386,8 +420,10 @@ public class FinalProj {
         //download files and add them to new ArrayList  
         for (int i = 0; i < entryIDArray.size(); i++) {
             
+            //call repoFile method to make RemoteFile object
             Object repoFileLF = repoFile(repoID, entryIDArray.get(i));
             
+            //add Remotefile to array
             filesFromRepoDirect.add(repoFileLF);
             
             
@@ -398,7 +434,7 @@ public class FinalProj {
         //return ArrayList of files in directory
         return filesFromRepoDirect;
    
-    }
+    }//end of dlFromRepoDirectory
     
     /**
      * Aizah
