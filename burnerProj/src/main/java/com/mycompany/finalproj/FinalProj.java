@@ -680,7 +680,7 @@ public class FinalProj {
      * @return
      * @throws IOException 
      */
-    public static ArrayList split(int n, ArrayList<Object> entries) throws IOException {
+    public static ArrayList split(int n, ArrayList<Object> entries) throws IOException {//input #lines as n && ArrayList of etries
         n = Math.abs(n);// As long as n>0
         ArrayList<Object> newEntries = new ArrayList<>();
         
