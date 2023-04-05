@@ -673,30 +673,30 @@ public class FinalProj {
     }
     
     /**
-     * Patino
+     * Daniel
      * @param n
      * @param entries
      * @param outputFilePrefix
      * @return
      * @throws IOException 
      */
-    public static ArrayList split(int n, ArrayList<Object> entries) throws IOException {//input #lines as n && ArrayList of etries
+    public static ArrayList split(int n, ArrayList<Object> entries) throws IOException {//input #lines as n && ArrayList of etries//returns new arraylist 
         n = Math.abs(n);// As long as n>0
-        ArrayList<Object> newEntries = new ArrayList<>();
+        ArrayList<Object> newEntries = new ArrayList<>();//creates new arraylist
         
-        File folder = new File("Split Files");
-        folder.mkdirs();
+        File folder = new File("Split Files");//this creates Split downloads in the 
+        folder.mkdirs();//creates the directory if doesnt exist
         
-        File readFile = null;
+        File readFile = null;//intialize
    
-        for (int i = 0; i < entries.size(); i++) {
-         
+        for (int i = 0; i < entries.size(); i++) {//for each entry
             int fileCount = 1;// original file
             int lineCount = 0;// count lines
-            
+           
+        //check is remote && local file
         if ((entries.get(i) instanceof File && ((File)entries.get(i)).isFile()) ||
                 entries.get(i) instanceof RemoteFile) {
-         //check is remote or local file
+         
          
          if(entries.get(i) instanceof File){
              readFile = (File) entries.get(i);
@@ -726,7 +726,7 @@ public class FinalProj {
             writer.close();//closes the writer
             
         } catch (IOException e) {
-            System.out.println("An error occurred while splitting the file: " + e.getMessage());
+            System.out.println("An error occurred while splitting the file: " + e.getMessage());//error message if try does not work
         }
         }else{
             newEntries.add(entries.get(i));
@@ -734,48 +734,50 @@ public class FinalProj {
         
         }
         
-        return newEntries;
+        return newEntries;//return the array of new entries
     }
     
     
     
     /**
-     * Patino
+     * Daniel
      * @param suffix
      * @param entries
      * @return
      * @throws IOException 
      */
-    public static ArrayList<Object> rename(String suffix, ArrayList<Object> entries) throws IOException {
-        ArrayList<Object> changedFiles = new ArrayList<>();
+    public static ArrayList<Object> rename(String suffix, ArrayList<Object> entries) throws IOException {//input string SUFFIX and arraylist of entries//outputs newArraylist
+        ArrayList<Object> changedFiles = new ArrayList<>();//new ArrayList
+        
+        //creates new folder RENAMED FILES and creates the directory if doesnt exist
         File folder = new File("Renamed Files");
         folder.mkdirs();
         
-        File file = null;
+        File file = null;//initialize make sure theres something there
     
-        for (int i = 0; i < entries.size(); i++) { 
+        for (int i = 0; i < entries.size(); i++) { //check all entries
             
             
             if ((entries.get(i) instanceof File && ((File)entries.get(i)).isFile() ||
-                    entries.get(i) instanceof RemoteFile)) {
+                    entries.get(i) instanceof RemoteFile)) {//if file leads to file or leads to remote file
                 
-                if(entries.get(i) instanceof File){
+                if(entries.get(i) instanceof File){//what type of file is it? this local file
                     file = (File) entries.get(i);
-                }else{
-                    file = ((RemoteFile) entries.get(i)).getFileobj();
+                }else{//must be remote
+                    file = ((RemoteFile) entries.get(i)).getFileobj();//calls the remoteFile class gets file from repo
                 }   
                     
-                String prefix = file.getName();
-                String filepath = "Renamed Files/" + prefix + suffix;
-                File renamedFile = new File(filepath);
+                String prefix = file.getName();//calls remoteFile class to get the base assign to string
+                String filepath = "Renamed Files/" + prefix + suffix;//creates string for file path with the updated named by including the base and the inputed suffix
+                File renamedFile = new File(filepath);//now that we created string now we have to make the file
 
-            try (FileInputStream fis = new FileInputStream(file);
+            try (FileInputStream fis = new FileInputStream(file);//initialize the file output and file input
                  FileOutputStream fos = new FileOutputStream(renamedFile)) {
 
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = fis.read(buffer)) != -1) {
-                    fos.write(buffer, 0, bytesRead);
+                byte[] buffer = new byte[1024];//initializes array called buffer size of array
+                int bytesRead;//
+                while ((bytesRead = fis.read(buffer)) != -1) {//reads data from input stream 
+                    fos.write(buffer, 0, bytesRead);//writes to file output stream of array 
                 }
                 System.out.println("File copied successfully to: " + renamedFile.getAbsolutePath());
                 changedFiles.add(renamedFile);
@@ -788,7 +790,7 @@ public class FinalProj {
             }
     }
 
-    return changedFiles;
+    return changedFiles;//return the new arrayList
 }
     
     /**
