@@ -741,7 +741,7 @@ public class FinalProj {
          
          if(entries.get(i) instanceof File){
              readFile = (File) entries.get(i);
-         }else{
+         }else{//remoteFile
              readFile = ((RemoteFile) entries.get(i)).getFileobj();
          }
                    
@@ -823,7 +823,7 @@ public class FinalProj {
                 System.out.println("File copied successfully to: " + renamedFile.getAbsolutePath());
                 changedFiles.add(renamedFile);
             } catch (IOException e) {
-                System.out.println("Failed to copy the file: " + e.getMessage());
+                System.out.println( e.getMessage());
             }
 
         }else{
