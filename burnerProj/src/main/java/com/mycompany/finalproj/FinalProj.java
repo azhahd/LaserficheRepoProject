@@ -503,35 +503,59 @@ public class FinalProj {
      * @return
      * @throws IOException 
      */
-    public static ArrayList<Object> countFilter(ArrayList<Object> entries, String key, int min) throws IOException {
+    public static ArrayList<Object> countFilter(ArrayList<Object> entries, String key, int min) throws IOException 
+    {
+        /*countFilter takes parameters: arraylist of file objects, a string key, a integer min 
+        value greater than 0*/
+        
+        //A new arraylist of file objects is initialised and anmes filteredEntries
         ArrayList<Object> filteredEntries = new ArrayList<>();
         
         BufferedReader reader = null;
         
-        for (Object entry : entries) {
+        //for loop iterates over each file object in the entries list
+        for (Object entry : entries) 
+        {
+            //checks if entry object is an instance of the file class and if the file is not a directory
+            //also checks if it is an instance of the Remote file class
             if ((entry instanceof File && ((File)entry).isFile()) ||
-                    entry instanceof RemoteFile) {
+                    entry instanceof RemoteFile) 
+            {
                 
-                if(entry instanceof File file){
-                    reader = new BufferedReader(new FileReader(file));
-                }else{
+                //checks if entry object is an instance of the file class
+                if(entry instanceof File file)
+                {
+                    reader = new BufferedReader(new FileReader(file));//initialised to a new file reader
+                }
+                else
+                {
+                    //initialised to a new FileReader object created using the File object retrieved from the remoteFile object
                     reader = new BufferedReader(new FileReader(((RemoteFile)entry).getFileobj()));
                 }
                
-                String line;
-                int count = 0;
-                while ((line = reader.readLine()) != null) {
+                String line; //used to read the lines of the text
+                
+                int count = 0; //count set to 0
+                
+                //while loop to read each line of the file -- using the readLine() method
+                while ((line = reader.readLine()) != null) //checks if the line is not null
+                {
+                    /*as the line isn't NULL --> the countSubstring() function counts the 
+                    occurences of the key string in that line --> and this value is added 
+                    to the count variable */
                     count += countSubstring(line.toLowerCase(), key.toLowerCase());
                 }
-                reader.close();
                 
-                if (count >= min) {
-                    filteredEntries.add(entry);
+                reader.close(); //once the file is completely read, the Buffered reader object is closed
+                
+                if (count >= min) //checks if count variable is greater than the min 
+                {
+                    filteredEntries.add(entry); //because it is, the entry object is added to the filtered list array list
                 }
             }
         }
         
-        return filteredEntries;
+        return filteredEntries; //returning the arraylist
     }
     
     /**
@@ -540,17 +564,34 @@ public class FinalProj {
      * @param substr
      * @return 
      */
-    private static int countSubstring(String str, String substr) {
-        int count = 0;
-        int lastIndex = 0;
-        while (lastIndex != -1) {
+    
+    //count substring takes 2 parameters and it returns an integer value, count
+    private static int countSubstring(String str, String substr) 
+    {
+        //counts the occurences of the substring
+        int count = 0; //count is set to 0
+        
+        int lastIndex = 0;//keeps track of the last position in str where ever the match is found
+        
+        //while loop continues until there are no more matches of substr in str
+        while (lastIndex != -1) 
+        {
+            //checks if there is a match of substr in str starting from lastIndex
+            //if there is a match --> index of the first occurence is returned and stored in lastIndex
             lastIndex = str.indexOf(substr, lastIndex);
-            if (lastIndex != -1) {
-                count++;
-                lastIndex += substr.length();
+            //if no match then -1 is returned
+            
+            //if loop - checks if match is found
+            if (lastIndex != -1) 
+            {
+                count++; //count var incremented by 1
+                lastIndex += substr.length(); //updates the lastIndex var to the position after current match
             }
         }
-        return count;
+        //while loop happens until there are no more matches of substr in str
+        
+        //the num of times substr appears in str
+        return count;//count is returned
     }
     
     
